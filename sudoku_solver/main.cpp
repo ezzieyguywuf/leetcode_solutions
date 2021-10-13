@@ -107,7 +107,7 @@ constexpr Indices makeRowIndices() {
     for(int i = 0; i < 9; i++) {
         IndexRow row;
         for (int j = 0; j < 9; j++) {
-            row[j] = (i + j*9);
+            row[j] = i * 9 + j;
         }
 
         out[i] = row;
