@@ -1,5 +1,6 @@
 #include <algorithm> // use -std=c++20 for std::ranges
 #include <iostream>
+#include <ostream>
 #include <unordered_set>
 #include <vector>
 
@@ -18,12 +19,19 @@ const std::vector<std::vector<char>> INPUT = {
 // Data definitions
 struct Cell;
 using Board = std::vector<std::vector<Cell>>;
+using IndexRow = std::array<std::size_t, 9>;
+using Indices = std::array<IndexRow, 9>;
 namespace ranges = std::ranges;
 
 // function declarations
 Board makeBoard(std::vector<std::vector<char>> const& input);
-void printRow(std::vector<Cell> const& row);
-void printBoard (Board const& brd);
+template<typename T>
+void printRow(std::vector<T> const& row);
+template<typename T>
+void printBoard (std::vector<std::vector<T>> const& brd);
+constexpr Indices makeRowIndices();
+std::ostream& operator<<(std::ostream& os, Cell const& cell);
+
 
 int main() {
     Board board = makeBoard(INPUT);
@@ -74,16 +82,17 @@ Board makeBoard(std::vector<std::vector<char>> const& input)
     return board;
 }
 
-void printRow(std::vector<Cell> const& row)
+template<typename T>
+void printRow(std::vector<T> const& row)
 {
     for(auto it = row.begin(); it != row.end(); it++) {
-        Cell const& cell = *it;
-        std::cout
-            << cell.toChar() << (it == row.end() - 1 ? "" : ", ");
+        T const& t = *it;
+        std::cout << t << (it == row.end() - 1 ? "" : ", ");
     }
 }
 
-void printBoard (Board const& brd)
+template<typename T>
+void printBoard (std::vector<std::vector<T>> const& brd)
 {
     for(auto it = brd.begin(); it != brd.end(); it++) {
         std::cout << "[";
@@ -92,3 +101,23 @@ void printBoard (Board const& brd)
     }
 }
 
+constexpr Indices makeRowIndices() {
+    Indices out;
+
+    for(int i = 0; i < 9; i++) {
+        IndexRow row;
+        for (int j = 0; j < 9; j++) {
+            row[j] = (i + j*9);
+        }
+
+        out[i] = row;
+    }
+
+    return out;
+}
+
+std::ostream& operator<<(std::ostream& os, Cell const& cell)
+{
+    os << cell.toChar();
+    return os;
+}
