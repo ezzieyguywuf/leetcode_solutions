@@ -15,17 +15,35 @@ const std::vector<std::vector<char>> INPUT = {
     {'.','.','.','.','8','.','.','7','9'}
 };
 
+// Data definitions
+struct Cell;
+using Board = std::vector<std::vector<Cell>>;
+namespace ranges = std::ranges;
 
-struct Cell {
+// function declarations
+Board makeBoard(std::vector<std::vector<char>> const& input);
+void printRow(std::vector<Cell> const& row);
+void printBoard (Board const& brd);
+
+int main() {
+    Board board = makeBoard(INPUT);
+
+    printBoard(board);
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+//                          implementation below
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+struct Cell
+{
     Cell(){}
     explicit Cell(int i) : vals({i}){}
     std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 };
 
-using Board = std::vector<std::vector<Cell>>;
-namespace ranges = std::ranges;
-
-Board makeBoard(std::vector<std::vector<char>> const& input) {
+Board makeBoard(std::vector<std::vector<char>> const& input)
+{
     Board board;
 
     auto convertRow = [&board](std::vector<char> row) {
@@ -64,8 +82,3 @@ void printBoard (Board const& brd)
     }
 }
 
-int main() {
-    Board board = makeBoard(INPUT);
-
-    printBoard(board);
-}
