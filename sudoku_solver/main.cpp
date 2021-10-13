@@ -28,7 +28,7 @@ Board makeBoard(std::vector<std::vector<char>> const& input);
 template<typename T>
 void printRow(std::vector<T> const& row);
 template<typename T>
-void printBoard (std::vector<std::vector<T>> const& brd);
+void printTable (std::vector<std::vector<T>> const& table);
 constexpr Indices makeRowIndices();
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 
@@ -36,7 +36,7 @@ std::ostream& operator<<(std::ostream& os, Cell const& cell);
 int main() {
     Board board = makeBoard(INPUT);
 
-    printBoard(board);
+    printTable(board);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -92,12 +92,12 @@ void printRow(std::vector<T> const& row)
 }
 
 template<typename T>
-void printBoard (std::vector<std::vector<T>> const& brd)
+void printTable (std::vector<std::vector<T>> const& table)
 {
-    for(auto it = brd.begin(); it != brd.end(); it++) {
+    for(auto it = table.begin(); it != table.end(); it++) {
         std::cout << "[";
         printRow(*it);
-        std::cout << "]" << (it == brd.end() - 1 ? "" : "\n") << std::endl;
+        std::cout << "]" << (it == table.end() - 1 ? "" : "\n") << std::endl;
     }
 }
 
