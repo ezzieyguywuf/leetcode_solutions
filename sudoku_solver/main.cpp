@@ -26,6 +26,7 @@ struct Cell{
     std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 };
 using Board = std::array<Cell, 81>;
+namespace ranges = std::ranges;
 
 // function declarations
 Board makeBoard(std::vector<std::vector<char>> const& input);
@@ -55,13 +56,7 @@ int main() {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bool isSolved(Board const& board) {
-    for (Cell const& cell : board) {
-        if (cell.vals.size() > 1) {
-            return false;
-        }
-    }
-
-    return true;
+    return not ranges::any_of(board, [](Cell const& cell) { return cell.vals.size() > 1; });
 }
 
 int makeIndex(int row, int col)
