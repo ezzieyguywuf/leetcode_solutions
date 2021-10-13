@@ -29,6 +29,7 @@ using Board = std::array<Cell, 81>;
 // function declarations
 Board makeBoard(std::vector<std::vector<char>> const& input);
 Board eliminateDupes(Board const& board);
+Board completeColumns(Board const& board);
 int makeIndex(int row, int col);
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 std::ostream& operator<<(std::ostream& os, Board const& board);
@@ -39,6 +40,11 @@ int main() {
     std::cout << board << '\n';
 
     board = eliminateDupes(board);
+    board = completeColumns(board);
+    board = eliminateDupes(board);
+    board = completeColumns(board);
+    board = eliminateDupes(board);
+    board = completeColumns(board);
     std::cout << board << '\n';
 
 }
@@ -125,6 +131,43 @@ Board eliminateDupes(Board const& data)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    return board;
+}
+
+Board completeColumns(Board const& data) {
+    Board board(data);
+
+    for (int col = 0; col < 9; col++) {
+        std::unordered_set<int> still_need = {1, 2, 3, 4 ,5 ,6 ,7 ,8, 9};
+
+        // clean up what we already have
+        for (int row = 0; row < 9; row++) {
+            Cell const& cell = board[makeIndex(row, col)];
+
+            if (cell.vals.size() == 1) {
+                still_need.erase(*cell.vals.begin());
+            }
+        }
+
+        // if only one cell has it, then we can solve it
+        for (int const check : still_need) {
+            std::vector<int> matches;
+            /* std::cout << "still need " << check << '\n'; */
+            for (int row = 0; row < 9; row++) {
+                Cell const& cell = board[makeIndex(row, col)];
+
+                if (cell.vals.contains(check)) {
+                    /* std::cout << "found match in row " << row << '\n'; */
+                    matches.push_back(row);
+                }
+            }
+
+            if (matches.size() == 1) {
+                board[makeIndex(matches[0], col)].vals = {check};
             }
         }
     }
