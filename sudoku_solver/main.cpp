@@ -17,31 +17,36 @@ const std::vector<std::vector<char>> INPUT = {
 };
 
 // Data definitions
-struct Cell;
-using Board = std::vector<std::vector<Cell>>;
+struct Cell{
+    Cell();
+    explicit Cell(char c);
+    explicit Cell(int i);
+    char toChar() const;
+
+    std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+};
+using Board = std::array<Cell, 81>;
 using IndexRow = std::array<std::size_t, 9>;
 using Indices = std::array<IndexRow, 9>;
-namespace ranges = std::ranges;
 
 // function declarations
 Board makeBoard(std::vector<std::vector<char>> const& input);
-template<typename Container> void printRow(Container const& row);
-template<typename Container> void printTable (Container const& table);
 constexpr Indices makeIndices(bool makeRows = true);
 constexpr Indices makeSquareIndices();
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
+std::ostream& operator<<(std::ostream& os, Board const& board);
 
 
 int main() {
     Board board = makeBoard(INPUT);
-    Indices rows = makeIndices();
-    Indices cols = makeIndices(false);
-    Indices sqrs = makeSquareIndices();
+    /* Indices rows = makeIndices(); */
+    /* Indices cols = makeIndices(false); */
+    /* Indices sqrs = makeSquareIndices(); */
 
-    printTable(board);
-    printTable(rows);
-    printTable(cols);
-    printTable(sqrs);
+    std::cout << board << '\n';
+    /* printTable(rows); */
+    /* printTable(cols); */
+    /* printTable(sqrs); */
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -53,57 +58,23 @@ int main() {
  *  A cell is "solved" when the set of potential values contains only a single
  *  number
  */
-struct Cell
+int makeIndex(int row, int col)
 {
-    Cell(){}
-    explicit Cell(int i) : vals({i}){}
-    char toChar() const {
-        return vals.size() > 1
-                ? '.'
-                : (char) (*vals.begin() + 48);
-    }
-    std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-};
+    return row * 9 + col;
+}
 
 Board makeBoard(std::vector<std::vector<char>> const& input)
 {
     Board board;
 
-    auto convertRow = [&board](std::vector<char> row) {
-        std::vector<Cell> newRow;
-        ranges::for_each(row, [&newRow](char const& c) {
-            if (c == '.') {
-                newRow.push_back(Cell());
-            }
-            else {
-                // ascii for number '1' is 49
-                newRow.push_back(Cell((int) c - 48));
-            }
-        });
-        board.push_back(newRow);
-    };
-    ranges::for_each(input, convertRow);
+    for (int row = 0; row < 9; row++) {
+        for (int col = 0; col < 9; col++) {
+            int index = makeIndex(row, col);
+            board[index] = Cell(input[row][col]);
+        }
+    }
 
     return board;
-}
-
-template<typename Container>
-void printRow(Container const& row)
-{
-    for(auto it = row.begin(); it != row.end(); it++) {
-        auto const& t = *it;
-        std::cout << t << (it == row.end() - 1 ? "" : ", ");
-    }
-}
-
-template<typename Container>
-void printTable (Container const& table)
-{
-    for(auto it = table.begin(); it != table.end(); it++) {
-        std::cout << "[";
-        printRow(*it);
-        std::cout << "]" << (it == table.end() - 1 ? "" : "\n") << std::endl;
-    }
 }
 
 constexpr Indices makeIndices(bool makeRows) {
@@ -155,8 +126,41 @@ constexpr Indices makeSquareIndices()
     return out;
 }
 
+Cell::Cell(){}
+
+Cell::Cell(char c) {
+    if (c != '.') {
+        vals = {(int) c - 48};
+    }
+};
+Cell::Cell(int i) : vals({i}){};
+
+char Cell::toChar() const {
+    return vals.size() > 1
+            ? '.'
+            : (char) (*vals.begin() + 48);
+};
+
 std::ostream& operator<<(std::ostream& os, Cell const& cell)
 {
     os << cell.toChar();
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, Board const& board)
+{
+    for (int i = 0; i < board.size(); i++) {
+        Cell const& cell = board.at(i);
+        if (i % 9 == 0) {
+            os << '[';
+        }
+        os << cell;
+        if (i % 9 == 8) {
+            os << "]\n";
+        }
+        else {
+            os << ", ";
+        }
+    }
     return os;
 }
