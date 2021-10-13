@@ -25,18 +25,18 @@ namespace ranges = std::ranges;
 
 // function declarations
 Board makeBoard(std::vector<std::vector<char>> const& input);
-template<typename T>
-void printRow(std::vector<T> const& row);
-template<typename T>
-void printTable (std::vector<std::vector<T>> const& table);
+template<typename Container> void printRow(Container const& row);
+template<typename Container> void printTable (Container const& table);
 constexpr Indices makeRowIndices();
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 
 
 int main() {
     Board board = makeBoard(INPUT);
+    Indices rows = makeRowIndices();
 
     printTable(board);
+    printTable(rows);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -82,17 +82,17 @@ Board makeBoard(std::vector<std::vector<char>> const& input)
     return board;
 }
 
-template<typename T>
-void printRow(std::vector<T> const& row)
+template<typename Container>
+void printRow(Container const& row)
 {
     for(auto it = row.begin(); it != row.end(); it++) {
-        T const& t = *it;
+        auto const& t = *it;
         std::cout << t << (it == row.end() - 1 ? "" : ", ");
     }
 }
 
-template<typename T>
-void printTable (std::vector<std::vector<T>> const& table)
+template<typename Container>
+void printTable (Container const& table)
 {
     for(auto it = table.begin(); it != table.end(); it++) {
         std::cout << "[";
