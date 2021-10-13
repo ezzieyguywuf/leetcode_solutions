@@ -27,16 +27,18 @@ namespace ranges = std::ranges;
 Board makeBoard(std::vector<std::vector<char>> const& input);
 template<typename Container> void printRow(Container const& row);
 template<typename Container> void printTable (Container const& table);
-constexpr Indices makeRowIndices();
+constexpr Indices makeIndices(bool makeRows = true);
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 
 
 int main() {
     Board board = makeBoard(INPUT);
-    Indices rows = makeRowIndices();
+    Indices rows = makeIndices();
+    Indices cols = makeIndices(false);
 
     printTable(board);
     printTable(rows);
+    printTable(cols);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -101,13 +103,18 @@ void printTable (Container const& table)
     }
 }
 
-constexpr Indices makeRowIndices() {
+constexpr Indices makeIndices(bool makeRows) {
     Indices out;
 
     for(int i = 0; i < 9; i++) {
         IndexRow row;
         for (int j = 0; j < 9; j++) {
-            row[j] = i * 9 + j;
+            if (makeRows) {
+                row[j] = i * 9 + j;
+            }
+            else {
+                row[j] = i + j * 9;
+            }
         }
 
         out[i] = row;
