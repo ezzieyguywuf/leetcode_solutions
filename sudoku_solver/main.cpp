@@ -71,6 +71,20 @@ Board makeBoard(std::vector<std::vector<char>> const& input)
     return board;
 }
 
+// This will normalize a row or column number to the "upper-left" quadrant of
+// the sudoku square
+int upperLeft(int val) {
+    if (val < 3) {
+        return 0;
+    }
+    else if (val < 6) {
+        return 1;
+    }
+    else {
+        return 2;
+    }
+}
+
 Board eliminateDupes(Board const& data)
 {
     Board board(data);
@@ -99,14 +113,14 @@ Board eliminateDupes(Board const& data)
                 }
 
                 // update based on square
-                int first = (row % 3) * 9 + (col % 3) * 3;
+                int first = upperLeft(row) * 27 + upperLeft(col) * 3;
 
                 for (int _inc = 0; _inc < 3; _inc++) {
                     int _index = first + _inc * 9;
                     for (int _add = 0; _add < 3; _add++) {
-                        _index += _add;
-                        Cell& _cell = board[_index];
-                        if (makeIndex(row, col) != index && _cell.vals.size() == 1) {
+                        int _finalIndex = _index + _add;
+                        Cell& _cell = board[_finalIndex];
+                        if (index != _finalIndex && _cell.vals.size() == 1) {
                             cell.vals.erase(*_cell.vals.begin());
                         }
                     }
