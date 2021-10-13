@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
+// constants
 const std::vector<std::vector<char>> INPUT = {
     {'5','3','.','.','7','.','.','.','.'},
     {'6','.','.','1','9','5','.','.','.'},
@@ -30,6 +31,7 @@ using Board = std::array<Cell, 81>;
 Board makeBoard(std::vector<std::vector<char>> const& input);
 Board eliminateDupes(Board const& board);
 Board completeColumns(Board const& board);
+bool isSolved(Board const& board);
 int makeIndex(int row, int col);
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 std::ostream& operator<<(std::ostream& os, Board const& board);
@@ -39,12 +41,11 @@ int main() {
 
     std::cout << board << '\n';
 
-    board = eliminateDupes(board);
-    board = completeColumns(board);
-    board = eliminateDupes(board);
-    board = completeColumns(board);
-    board = eliminateDupes(board);
-    board = completeColumns(board);
+    while (not isSolved(board)) {
+        board = eliminateDupes(board);
+        board = completeColumns(board);
+    }
+
     std::cout << board << '\n';
 
 }
@@ -53,11 +54,16 @@ int main() {
 //                          implementation below
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-/** A single cell on the game board.
- *
- *  A cell is "solved" when the set of potential values contains only a single
- *  number
- */
+bool isSolved(Board const& board) {
+    for (Cell const& cell : board) {
+        if (cell.vals.size() > 1) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int makeIndex(int row, int col)
 {
     return row * 9 + col;
