@@ -28,6 +28,7 @@ Board makeBoard(std::vector<std::vector<char>> const& input);
 template<typename Container> void printRow(Container const& row);
 template<typename Container> void printTable (Container const& table);
 constexpr Indices makeIndices(bool makeRows = true);
+constexpr Indices makeSquareIndices();
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 
 
@@ -35,10 +36,12 @@ int main() {
     Board board = makeBoard(INPUT);
     Indices rows = makeIndices();
     Indices cols = makeIndices(false);
+    Indices sqrs = makeSquareIndices();
 
     printTable(board);
     printTable(rows);
     printTable(cols);
+    printTable(sqrs);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -118,6 +121,35 @@ constexpr Indices makeIndices(bool makeRows) {
         }
 
         out[i] = row;
+    }
+
+    return out;
+}
+
+constexpr Indices makeSquareIndices()
+{
+    Indices out;
+
+    for(int i = 0; i < 9; i++) {
+        IndexRow sqr;
+        for (int j = 0; j < 9; j++) {
+            int index = 3 * (i % 3) + 9 * (j % 3);
+            if (j >= 3 && j < 6) {
+                index += 1;
+            }
+            else if (j >=6) {
+                index += 2;
+            }
+            if (i >= 3 && i < 6) {
+                index += 27;
+            }
+            else if (i >= 6) {
+                index += 54;
+            }
+            sqr[j] = index;
+        }
+
+        out[i] = sqr;
     }
 
     return out;
