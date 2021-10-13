@@ -35,10 +35,20 @@ int main() {
 //                          implementation below
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
+/** A single cell on the game board.
+ *
+ *  A cell is "solved" when the set of potential values contains only a single
+ *  number
+ */
 struct Cell
 {
     Cell(){}
     explicit Cell(int i) : vals({i}){}
+    char toChar() const {
+        return vals.size() > 1
+                ? '.'
+                : (char) (*vals.begin() + 48);
+    }
     std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 };
 
@@ -69,7 +79,7 @@ void printRow(std::vector<Cell> const& row)
     for(auto it = row.begin(); it != row.end(); it++) {
         Cell const& cell = *it;
         std::cout
-            << (cell.vals.size() > 1 ? '.' : (char) (*cell.vals.begin() + 48)) << (it == row.end() - 1 ? "" : ", ");
+            << cell.toChar() << (it == row.end() - 1 ? "" : ", ");
     }
 }
 
