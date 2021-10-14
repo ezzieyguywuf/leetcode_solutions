@@ -45,7 +45,6 @@ Board eliminateDupes(Board const& board);
 Board completeColumns(Board const& board);
 bool isSolved(Board const& board);
 int makeIndex(int row, int col);
-void printForLeetCode(Board const& board);
 std::ostream& operator<<(std::ostream& os, Cell const& cell);
 std::ostream& operator<<(std::ostream& os, Board const& board);
 
@@ -64,7 +63,6 @@ int main() {
     }
 
     std::cout << board << '\n';
-    printForLeetCode(board);
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -242,20 +240,4 @@ std::ostream& operator<<(std::ostream& os, Board const& board)
         }
     }
     return os;
-}
-
-void printForLeetCode(Board const& board) {
-    std::cout << '[';
-    for (int row = 0; row < 9; row++) {
-        std::cout << '[';
-        for (int col = 0; col < 9; col++) {
-            int index = makeIndex(row, col);
-            Cell const& cell = board[index];
-            std::cout
-                << '"' << cell << '"'
-                << (col == 8 ? "": ",");
-        }
-        std::cout << ']' << (row == 8 ? "" : ",");
-    }
-    std::cout << ']';
 }
