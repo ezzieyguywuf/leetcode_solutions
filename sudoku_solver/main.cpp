@@ -48,7 +48,6 @@ Board eliminateDupes(Board const &board);
 Board completeColumns(Board const &board);
 bool isSolved(Board const &board);
 Board solveSimulatedAnnealing(Board const &board);
-int makeIndex(int row, int col);
 std::ostream &operator<<(std::ostream &os, Cell const &cell);
 std::ostream &operator<<(std::ostream &os, Board const &board);
 
@@ -78,6 +77,11 @@ int main() {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //                          implementation below
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// implementation details - declarations
+int makeIndex(int row, int col);
+
+// definitions
 
 Board solveSimulatedAnnealing(Board const &input) {
   Board board(input);
