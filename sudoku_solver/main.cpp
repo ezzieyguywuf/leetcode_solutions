@@ -34,7 +34,7 @@ struct Cell {
   Cell();
   explicit Cell(char c);
   explicit Cell(int i);
-  int operator<=>(Cell const &other) const = default;
+  bool operator==(Cell const &other) const = default;
   bool solved() const;
 
   std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
