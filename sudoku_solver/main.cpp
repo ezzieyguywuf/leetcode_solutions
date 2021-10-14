@@ -1,10 +1,11 @@
-#include <algorithm>  // use -std=c++20 for std::ranges
-#include <iomanip>
-#include <iostream>
-#include <ostream>
-#include <sstream>
-#include <unordered_set>
-#include <vector>
+#include <algorithm>      // use -std=c++20 for std::ranges
+#include <iomanip>        // std::setw
+#include <iostream>       //
+#include <ostream>        //
+#include <sstream>        //
+#include <unordered_set>  //
+#include <utility>        // std::pair
+#include <vector>         //
 
 // constants
 /* const std::vector<std::vector<char>> INPUT = { */
