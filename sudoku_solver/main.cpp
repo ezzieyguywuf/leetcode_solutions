@@ -35,6 +35,7 @@ struct Cell {
   explicit Cell(char c);
   explicit Cell(int i);
   int operator<=>(Cell const &other) const = default;
+  bool solved() const;
 
   std::unordered_set<int> vals = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 };
@@ -78,11 +79,14 @@ int main() {
 //                          implementation below
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Board solveSimulatedAnnealing(Board const &board) { return board; }
+Board solveSimulatedAnnealing(Board const &input) {
+  Board board(input);
+  return board;
+}
 
 bool isSolved(Board const &board) {
-  return not ranges::any_of(
-      board, [](Cell const &cell) { return cell.vals.size() > 1; });
+  return not ranges::any_of(board,
+                            [](Cell const &cell) { return cell.solved(); });
 }
 
 int makeIndex(int row, int col) { return row * 9 + col; }
@@ -119,12 +123,12 @@ Board eliminateDupes(Board const &data) {
     for (int col = 0; col < 9; col++) {
       int index = makeIndex(row, col);
       Cell &cell = board[index];
-      if (cell.vals.size() > 1) {
+      if (not cell.solved()) {
         // update based on row
         for (int _col = 0; _col < 9; _col++) {
           Cell &_cell = board[makeIndex(row, _col)];
 
-          if (col != _col && _cell.vals.size() == 1) {
+          if (col != _col && _cell.solved()) {
             cell.vals.erase(*_cell.vals.begin());
           }
         }
@@ -133,7 +137,7 @@ Board eliminateDupes(Board const &data) {
         for (int _row = 0; _row < 9; _row++) {
           Cell &_cell = board[makeIndex(_row, col)];
 
-          if (row != _row && _cell.vals.size() == 1) {
+          if (row != _row && _cell.solved()) {
             cell.vals.erase(*_cell.vals.begin());
           }
         }
@@ -146,7 +150,7 @@ Board eliminateDupes(Board const &data) {
           for (int _add = 0; _add < 3; _add++) {
             int _finalIndex = _index + _add;
             Cell &_cell = board[_finalIndex];
-            if (index != _finalIndex && _cell.vals.size() == 1) {
+            if (index != _finalIndex && _cell.solved()) {
               cell.vals.erase(*_cell.vals.begin());
             }
           }
@@ -168,7 +172,7 @@ Board completeColumns(Board const &data) {
     for (int row = 0; row < 9; row++) {
       Cell const &cell = board[makeIndex(row, col)];
 
-      if (cell.vals.size() == 1) {
+      if (cell.solved()) {
         still_need.erase(*cell.vals.begin());
       }
     }
@@ -204,10 +208,12 @@ Cell::Cell(char c) {
 };
 Cell::Cell(int i) : vals({i}){};
 
+bool Cell::solved() const { return vals.size() == 1; }
+
 std::ostream &operator<<(std::ostream &os, Cell const &cell) {
   std::ostringstream out;
 
-  if (cell.vals.size() > 1) {
+  if (not cell.solved()) {
     out << '(';
     int i = 0;
     for (auto const &val : cell.vals) {
