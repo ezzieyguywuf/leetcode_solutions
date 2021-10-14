@@ -1,6 +1,8 @@
 #include <algorithm> // use -std=c++20 for std::ranges
 #include <iostream>
+#include <iomanip>
 #include <ostream>
+#include <sstream>
 #include <unordered_set>
 #include <vector>
 
@@ -201,42 +203,53 @@ Cell::Cell(int i) : vals({i}){};
 
 std::ostream& operator<<(std::ostream& os, Cell const& cell)
 {
+    std::ostringstream out;
+
     if (cell.vals.size() > 1) {
-        os << '(';
+        out << '(';
         int i = 0;
         for (auto const& val : cell.vals) {
-            os << val;
+            out << val;
 
             if (i < cell.vals.size() - 1) {
-                os << ", ";
+                out << ",";
             }
             else {
-                os << ')';
+                out << ')';
             }
 
             i++;
         }
     }
     else {
-        os << (char) (*cell.vals.begin() + 48);
+        out << (char) (*cell.vals.begin() + 48);
     }
 
+    os << std::setw(12) << out.str();
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os, Board const& board)
 {
+    std::string rule(125, '-');
+    os << rule << '\n';
     for (int i = 0; i < board.size(); i++) {
         Cell const& cell = board.at(i);
         if (i % 9 == 0) {
-            os << '[';
+            os << '|';
         }
         os << cell;
-        if (i % 9 == 8) {
-            os << "]\n";
+        if (i % 3 ==2) {
+            os << "|";
         }
         else {
             os << ", ";
+        }
+        if (i % 9 == 8) {
+            os << "\n";
+        }
+        if (i % 27 == 26) {
+            os << rule << '\n';
         }
     }
     return os;
