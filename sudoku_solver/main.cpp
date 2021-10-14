@@ -1,8 +1,9 @@
 #include <algorithm>      // use -std=c++20 for std::ranges
+#include <array>          //
+#include <concepts>       // for ranges
 #include <iomanip>        // std::setw
 #include <iostream>       //
-#include <ostream>        //
-#include <sstream>        //
+#include <string>         //
 #include <unordered_set>  //
 #include <utility>        // std::pair
 #include <vector>         //
@@ -81,6 +82,7 @@ int main() {
 
 // implementation details - declarations
 int makeIndex(int row, int col);
+std::vector<std::pair<int, int>> makeRandomSolution(Board const &input);
 
 // definitions
 
